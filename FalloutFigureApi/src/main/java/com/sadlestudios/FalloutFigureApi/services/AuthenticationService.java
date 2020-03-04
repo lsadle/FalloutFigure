@@ -2,6 +2,7 @@ package com.sadlestudios.FalloutFigureApi.services;
 
 import com.sadlestudios.FalloutFigureApi.entities.AddressEntity;
 import com.sadlestudios.FalloutFigureApi.entities.UserEntity;
+import com.sadlestudios.FalloutFigureApi.models.Address;
 import com.sadlestudios.FalloutFigureApi.models.LoginCredentials;
 import com.sadlestudios.FalloutFigureApi.models.NewUserInfo;
 import com.sadlestudios.FalloutFigureApi.models.User;
@@ -29,7 +30,7 @@ public class AuthenticationService {
      * @param newUser The new user and addresses to make.
      * @return The id of the new user
      */
-    public UUID CreateUser(NewUserInfo newUser) {
+    public User CreateUser(NewUserInfo newUser) {
         if (newUser == null) {
             return null;
         }
@@ -43,6 +44,7 @@ public class AuthenticationService {
 
             UUID shippingAddressId = null;
             UUID billingAddressId = null;
+            Address shippingAddress = null;
 
             // Create the billing address
             var billingAddress = new AddressEntity(newUser.getBillingAddress().getStreet(), newUser.getBillingAddress().getCity(), newUser.getBillingAddress().getState());
@@ -54,16 +56,20 @@ public class AuthenticationService {
                 shippingAddressId = billingAddressId;
             } else {
                 // Otherwise, create the shipping address
-                var shippingAddress = new AddressEntity(newUser.getShippingAddress().getStreet(), newUser.getShippingAddress().getCity(), newUser.getShippingAddress().getState());
-                addressRepository.saveAndFlush(shippingAddress);
-                shippingAddressId = shippingAddress.getAddressId();
+                var shippingAddressEntity = new AddressEntity(newUser.getShippingAddress().getStreet(), newUser.getShippingAddress().getCity(), newUser.getShippingAddress().getState());
+                addressRepository.saveAndFlush(shippingAddressEntity);
+                shippingAddressId = shippingAddressEntity.getAddressId();
+                shippingAddress = shippingAddressEntity.toAddress();
             }
 
             // Finally, create the new user
-            var user = new UserEntity(User.hashPassword(newUser.getPlainTextPassword()), newUser.getUsername(), shippingAddressId, billingAddressId);
-            userRepository.saveAndFlush(user);
+            var userEntity = new UserEntity(User.hashPassword(newUser.getPlainTextPassword()), newUser.getUsername(), shippingAddressId, billingAddressId);
+            userRepository.saveAndFlush(userEntity);
 
-            return user.getUserId();
+
+            var user = new User(userEntity.getUsername(), shippingAddress, billingAddress.toAddress());
+            user.setUserId(userEntity.getUserId());
+            return user;
         } catch (Exception ex) {
             System.out.println(ex);
         }
