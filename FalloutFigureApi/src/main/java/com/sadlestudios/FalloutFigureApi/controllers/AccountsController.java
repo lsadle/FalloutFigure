@@ -7,6 +7,8 @@ import com.sadlestudios.FalloutFigureApi.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("accounts")
 public class AccountsController {
@@ -24,7 +26,7 @@ public class AccountsController {
     }
 
     @PostMapping("/UserLogin")
-    public boolean UserLogin(@RequestBody LoginCredentials credentials) {
+    public UUID UserLogin(@RequestBody LoginCredentials credentials) {
         return authService.CheckUserPassword(credentials);
     }
 }

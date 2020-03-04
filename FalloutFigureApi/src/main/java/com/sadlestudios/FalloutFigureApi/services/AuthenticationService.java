@@ -82,14 +82,20 @@ public class AuthenticationService {
      * @param credentials A username / password combination
      * @return Whether or not the combination exists in the database
      */
-    public boolean CheckUserPassword(LoginCredentials credentials) {
+    public UUID CheckUserPassword(LoginCredentials credentials) {
         // Get the user from the database
         var user = userRepository.findByUsername(credentials.getUsername());
         if (user == null) {
-            return false;
+            return null;
         }
 
         // Verify the password is correct
-        return User.checkPassword(credentials.getPassword(), user.getPassword());
+        var verified = User.checkPassword(credentials.getPassword(), user.getPassword());
+
+        if (verified) {
+            return user.getUserId();
+        }
+
+        return null;
     }
 }
