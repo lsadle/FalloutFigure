@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+
 div.card-header {
   font-size: large;
 }
@@ -6,7 +6,14 @@ div.card-header {
 div.card {
   margin-top: 10px
 }
+div.row {
+  margin-top: 10px
+}
 
-.container {
+.center {
+  margin: auto;
+  display: block;
+  width: 50%;
   text-align: center;
+  padding: 10px;
 }

@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AccountService} from '../../Services/account.service';
 import {Address} from '../../ApiModels/address';
 import {NewUserInfo} from '../../ApiModels/new-user-info';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -11,9 +12,10 @@ import {NewUserInfo} from '../../ApiModels/new-user-info';
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
+  showShippingAddress = false;
   error = false;
 
-  constructor(private builder: FormBuilder, private accountService: AccountService) { }
+  constructor(private builder: FormBuilder, private accountService: AccountService, private router: Router) { }
 
   ngOnInit(): void {
     this.signupForm = this.builder.group({
@@ -26,11 +28,16 @@ export class SignupComponent implements OnInit {
       shippingStreet: [''],
       shippingCity: [''],
       shippingState: [''],
-      sameAsBilling: [true]
+      sameAsBilling: [!this.showShippingAddress]
     });
 
     this.signupForm.get('sameAsBilling').valueChanges.subscribe(
-      value => this.setShippingAddressValidators(value)
+      value => {
+        this.showShippingAddress = !value;
+        this.setShippingAddressValidators(value);
+        console.log(value);
+        console.log(this.showShippingAddress);
+      }
     );
   }
 
@@ -70,11 +77,14 @@ export class SignupComponent implements OnInit {
     }
     const newUserInfo = new NewUserInfo(username, password, billingAddress, shippingAddress);
 
-    try {
-      this.accountService.signup(newUserInfo);
-    } catch (e) {
-      console.log(e);
-      this.error = true;
-    }
+    this.accountService.signup(newUserInfo).subscribe(
+      data => {
+        console.log('Navigating to Login');
+        this.router.navigate(['/login']);
+      },
+      error => {
+        console.log(error);
+        this.error = true;
+      });
   }
 }

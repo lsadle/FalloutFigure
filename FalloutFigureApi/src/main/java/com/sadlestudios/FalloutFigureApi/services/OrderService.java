@@ -27,7 +27,7 @@ public class OrderService {
         var entity = orderRepository.getOne(id);
         var order = entity.toOrder();
         var orderDetails = orderDetailService.GetByOrderId(id);
-        order.setOrderDetail(orderDetails);
+        order.setOrderDetails(orderDetails);
 
         return order;
     }
@@ -44,7 +44,7 @@ public class OrderService {
         for (var entity: entities) {
             var order = entity.toOrder();
             var orderDetails = orderDetailService.GetByOrderId(order.getOrderId());
-            order.setOrderDetail(orderDetails);
+            order.setOrderDetails(orderDetails);
             orders.add(order);
         }
 
@@ -62,7 +62,7 @@ public class OrderService {
         newOrder.setOrderId(entity.getOrderId());
 
         // Set the orderId for all sub OrderDetail objects and then save them to the database
-        for (var orderDetail : newOrder.getOrderDetail()) {
+        for (var orderDetail : newOrder.getOrderDetails()) {
             orderDetail.setOrderId(newOrder.getOrderId());
             orderDetailService.Create(orderDetail);
         }

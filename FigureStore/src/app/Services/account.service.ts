@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LoginCredentials} from '../ApiModels/login-credentials';
 import {NewUserInfo} from '../ApiModels/new-user-info';
-import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {User} from '../ApiModels/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,38 +16,29 @@ export class AccountService {
   };
   baseUrl = 'http://localhost:8080/accounts/';
 
-  constructor(private client: HttpClient, private router: Router) { }
+  constructor(private client: HttpClient) { }
 
-  login(credentials: LoginCredentials): void {
+  login(credentials: LoginCredentials): Observable<string> {
     console.log('Logging in');
     const url = this.baseUrl + 'UserLogin';
 
-    this.client.post<string>(url, JSON.stringify(credentials), this.httpOptions).subscribe(
-      data => {
-        if (data != null) {
-          console.log('Navigating to Store');
-          this.router.navigate(['/store'], {queryParams: {userId: data}});
-        } else {
-          throw new Error();
-        }
-      },
-      error => console.log(error));
+    const userId = this.client.post<string>(url, JSON.stringify(credentials), this.httpOptions);
+    if (userId == null) {
+      throw new Error('Invalid login');
+    }
+
+    return userId;
   }
 
-  signup(newUserInfo: NewUserInfo): void {
+  signup(newUserInfo: NewUserInfo): Observable<User> {
     console.log('Creating new User');
     const url = this.baseUrl + 'CreateUser';
 
-    this.client.post(url, JSON.stringify(newUserInfo), this.httpOptions).subscribe(
-      data => {
-        console.log(data);
-        if (data != null) {
-          console.log('Navigating to Login');
-          this.router.navigate(['/login']);
-        } else {
-          throw new Error();
-        }
-      },
-      error => console.log(error));
+    const user = this.client.post<User>(url, JSON.stringify(newUserInfo), this.httpOptions);
+    if (user == null) {
+      throw new Error('Problem saving new user');
+    }
+
+    return user;
   }
 }

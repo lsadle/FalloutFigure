@@ -11,13 +11,13 @@ public class Order {
     private UUID userId;
     private Date orderDate;
 
-    private List<OrderDetail> orderDetail;
+    private List<OrderDetail> orderDetails;
 
     public Order() { }
     public Order(UUID orderId, UUID userId, Date orderDate, List<OrderDetail> orderDetail) {
         this.orderId = orderId;
         this.userId = userId;
         this.orderDate = orderDate;
-        this.orderDetail = orderDetail;
+        this.orderDetails = orderDetail;
     }
 }
