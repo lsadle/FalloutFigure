@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Figure} from '../ApiModels/figure';
-import {User} from '../ApiModels/user';
-import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

@@ -18,7 +18,7 @@ export class UserService {
 
   getUser(userId: string): Observable<User> {
     console.log('Getting user ' + userId);
-    const url = this.baseUrl;
+    const url = this.baseUrl + userId;
 
     const user = this.client.get<User>(url, this.httpOptions);
 

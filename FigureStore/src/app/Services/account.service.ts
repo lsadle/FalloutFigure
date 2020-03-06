@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {LoginCredentials} from '../ApiModels/login-credentials';
 import {NewUserInfo} from '../ApiModels/new-user-info';
 import {Observable, throwError} from 'rxjs';
 import {User} from '../ApiModels/user';
-import {map, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,8 @@ export class AccountService {
     })
   };
   baseUrl = 'http://localhost:8080/accounts/';
+  userLoginEvent = new EventEmitter();
+  userLogoutEvent = new EventEmitter();
 
   constructor(private client: HttpClient) { }
 
@@ -29,8 +31,6 @@ export class AccountService {
         throw new Error(message);
       }
     }));
-
-    return throwError(message);
   }
 
   signup(newUserInfo: NewUserInfo): Observable<User> {
@@ -38,13 +38,11 @@ export class AccountService {
     const url = this.baseUrl + 'CreateUser';
     const message = 'Problem saving new user';
 
-    this.client.post<User>(url, JSON.stringify(newUserInfo), this.httpOptions).pipe(
+    return this.client.post<User>(url, JSON.stringify(newUserInfo), this.httpOptions).pipe(
       tap(user => {
         if (user == null) {
           return throwError(message);
         }
       }));
-
-    return throwError(message);
   }
 }

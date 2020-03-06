@@ -4,7 +4,6 @@ import {FigureService} from '../../Services/figure.service';
 import {Figure} from '../../ApiModels/figure';
 import {User} from '../../ApiModels/user';
 import {ActivatedRoute} from '@angular/router';
-import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-figure-store',
@@ -22,7 +21,7 @@ export class FigureStoreComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const userId = this.route.snapshot.params.userId;
+    const userId = sessionStorage.getItem('userId');
 
     if (userId != null) {
       this.userService.getUser(userId).subscribe(user => this.user = user, err => console.log(err));
@@ -32,10 +31,10 @@ export class FigureStoreComponent implements OnInit {
   }
 
   onPurchase(figureId: string) {
-    const id = figureId;
+
   }
 
   onDetail(figureId: string) {
-    const id = figureId;
+
   }
 }

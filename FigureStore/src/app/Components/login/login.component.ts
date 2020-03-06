@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {LoginCredentials} from '../../ApiModels/login-credentials';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
 import {AccountService} from '../../Services/account.service';
 import {Router} from '@angular/router';
+import {UserService} from '../../Services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   invalidLogin = false;
 
-  constructor(private builder: FormBuilder, private accountService: AccountService, private router: Router) { }
+  constructor(private builder: FormBuilder, private accountService: AccountService, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loginForm = this.builder.group({
@@ -30,8 +30,16 @@ export class LoginComponent implements OnInit {
 
     this.accountService.login(credentials).subscribe(
       data => {
-        console.log('Navigating to Store');
-        this.router.navigate(['/store'], {queryParams: {userId: data}});
+        this.userService.getUser(data).subscribe(
+          (user) => {
+            sessionStorage.setItem('userId', user.userId);
+            sessionStorage.setItem('username', user.username);
+            this.accountService.userLoginEvent.emit();
+            console.log('Navigating to Store');
+            this.router.navigate(['/store']);
+          },
+          (err) => console.log(err)
+        );
       },
       error => {
         console.log(error);
