@@ -22,10 +22,7 @@ export class FigureStoreComponent implements OnInit {
 
   ngOnInit(): void {
     const userId = sessionStorage.getItem('userId');
-
-    if (userId != null) {
-      this.userService.getUser(userId).subscribe(user => this.user = user, err => console.log(err));
-    }
+    this.userService.getUser(userId).subscribe(user => this.user = user, err => console.log(err));
 
     this.figureService.getAll().subscribe(figures => this.figures = figures, err => console.log(err));
   }

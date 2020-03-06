@@ -9,6 +9,7 @@ import { WelcomeComponent } from './Components/welcome/welcome.component';
 import { LoginComponent } from './Components/login/login.component';
 import { SignupComponent } from './Components/signup/signup.component';
 import { FigureStoreComponent } from './Components/figure-store/figure-store.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { FigureStoreComponent } from './Components/figure-store/figure-store.com
     FigureStoreComponent
   ],
   imports: [
+    FontAwesomeModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
