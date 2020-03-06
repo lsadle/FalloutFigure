@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {LoginCredentials} from '../ApiModels/login-credentials';
 import {User} from '../ApiModels/user';
 import {Observable} from 'rxjs';
 
@@ -16,7 +14,7 @@ export class UserService {
   };
   baseUrl = 'http://localhost:8080/user/';
 
-  constructor(private client: HttpClient, private router: Router) { }
+  constructor(private client: HttpClient) { }
 
   getUser(userId: string): Observable<User> {
     console.log('Getting user ' + userId);

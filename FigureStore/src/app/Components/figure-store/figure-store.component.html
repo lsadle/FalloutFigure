@@ -1,1 +1,38 @@
-<p>figure-store works!</p>
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div *ngFor="let figure of figures; let i = index">
+      <div *ngIf="i % 3 == 0" class="row">
+
+        <div *ngFor="let figIndex of [0, 1, 2]">
+          <div *ngIf="i + figIndex < figures.length" class="card" style="width: 300px; margin-left: 10px;">
+            <div class="card-header" (click)="onDetail(figures[i + figIndex].figureId)">
+              <strong>{{figures[i + figIndex].name}}</strong>
+            </div>
+            <div class="card-body" (click)="onDetail(figures[i + figIndex].figureId)">
+              <img [src]="figures[i + figIndex].imageUrl" width="150px" height="200px" alt="figure image" />
+            </div>
+            <div class="card-footer">
+              <div class="row">
+                <div class="col-md-6">
+                  <strong>Price: {{figures[i + figIndex].price | currency}}</strong>
+                </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                  <button
+                    type="button"
+                    style="margin-top: -10px;"
+                    class="btn btn-outline-secondary"
+                    (click)="onPurchase(figures[i + figIndex].figureId)">
+                    Buy
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,6 +7,9 @@
           <h4>Login</h4>
         </div>
         <div class="form-group card-body">
+          <div *ngIf="invalidLogin" class="alert alert-danger" role="alert">
+            Username and/or Password is incorrect
+          </div>
           <div class="row">
             <label class="col-md-4 col-form-label"
                    for="username">Username: </label>
@@ -30,9 +33,6 @@
                      formControlName="password"/>
             </div>
           </div>
-          <span *ngIf="invalidLogin" class="invalid-feedback">
-      Username and/or Password is incorrect
-      </span>
         </div>
 
         <div class="card-footer">
